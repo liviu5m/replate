@@ -28,8 +28,11 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
     @Column(nullable = false)
+    private String fullName;
+    @Column(nullable = false)
     private String password;
 
+    private String image;
     private boolean enabled;
     @Column(name="verification_code")
     private String verificationCode;
@@ -41,6 +44,9 @@ public class User implements UserDetails {
     private UserRole role;
     private boolean verified;
     private String provider = "email";
+    private String city;
+    private String zip;
+    private String country;
 
     @CreationTimestamp
     @Column(updatable = false, name = "created_at")

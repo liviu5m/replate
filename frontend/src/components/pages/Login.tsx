@@ -4,9 +4,10 @@ import LogInForm from "../elements/user/LogInForm";
 
 const Signup = () => {
   const [step, setStep] = useState(1);
+  
 
   return (
-    <div className="flex items-center h-screen w-screen p-20">
+    <div className="flex items-center h-screen w-screen p-20 bg-[#121212]">
       <div className="bg-[linear-gradient(187deg,rgba(0,119,182,1)_0%,rgba(0,180,216,1)_51%,rgba(72,202,228,1)_100%)] w-1/2 h-full rounded-2xl flex items-end justify-center">
         <div className="flex items-center justify-center flex-col gap-5 w-1/2 text-white">
           <h2 className="font-bold text-xl">Replate</h2>

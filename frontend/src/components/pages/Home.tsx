@@ -1,5 +1,12 @@
+import Hero from "../elements/home/Hero";
+import BodyLayout from "../layouts/BodyLayout";
+
 const Home = () => {
-  return <div className="bg-black">fdsfdsfa</div>;
+  return (
+    <BodyLayout>
+      <Hero />
+    </BodyLayout>
+  )
 };
 
 export default Home;

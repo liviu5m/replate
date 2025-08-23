@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import type { AxiosError } from "axios";
 import { authenticate } from "../../../api/user";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppContext } from "../../../lib/AppContext";
 
 const LogInForm = () => {
@@ -12,8 +12,22 @@ const LogInForm = () => {
     password: "",
   });
   const { setToken } = useAppContext();
-
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    const error = searchParams.get("error");
+
+    if (error) {
+      setError(true);
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("error");
+      setSearchParams(newSearchParams);
+      setTimeout(() => {
+        setError(false);
+      }, 5000);
+    }
+  }, [searchParams, setSearchParams]);
 
   const { mutate, isPending } = useMutation({
     mutationFn: authenticate,
@@ -72,7 +86,7 @@ const LogInForm = () => {
         <img src="/imgs/google.png" className="w-7" />
         <span>Google</span>
       </button>
-
+      {error && <p className="text-red-500 font-semibold text-center">Something went wrong.</p>}
       <div className="relative w-1/2 mt-4">
         <div className="w-full bg-[#474747] h-px" />
         <span className="text-[#eee] absolute top-1/2 left-1/2 -translate-1/2 bg-[#121212] px-5">

@@ -45,8 +45,12 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         Optional<User> optionalUser = userRepository.findByEmail(oauth2User.getAttribute("email"));
         User user;
         if (!optionalUser.isPresent()) {
+            System.out.println(oauth2User);
             user = new User(oauth2User.getAttribute("email"), "google");
             user.setPassword(passwordEncoder.encode("google"));
+            user.setUsername(user.getEmail());
+            user.setFullName(oauth2User.getAttribute("name"));
+            user.setImage(oauth2User.getAttribute("picture"));
             user.setEnabled(true);
             user.setRole(UserRole.GUEST);
             userRepository.save(user);
@@ -66,7 +70,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             response.sendRedirect("http://localhost:5173/auth/google");
 
         }catch(Exception e) {
-            throw new RemoteException(e.getMessage());
+            response.sendRedirect("http://localhost:5173/auth/login?error=true");
         }
     }
 }

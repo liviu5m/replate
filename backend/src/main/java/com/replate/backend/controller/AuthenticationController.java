@@ -9,6 +9,8 @@ import com.replate.backend.service.AuthenticationService;
 import com.replate.backend.service.JwtService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,9 +56,7 @@ public class AuthenticationController {
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto){
         try {
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
-            System.out.println(authenticatedUser);
             String jwtToken = jwtService.generateToken(authenticatedUser);
-            System.out.println(jwtToken);
             LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
             return ResponseEntity.ok(loginResponse);
         } catch (Exception e) {

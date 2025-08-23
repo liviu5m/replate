@@ -8,13 +8,14 @@ import { AppProvider } from "./lib/AppContext";
 import GoogleAuth from "./components/pages/GoogleAuth";
 import AuthRequiredRoute from "./components/middleware/AuthRequiredRoute";
 import NonAuthRequiredRoute from "./components/middleware/NonAuthRequiredRoute";
+import Profile from "./components/pages/Profile";
 
 function App() {
   const queryClient = new QueryClient();
   return (
-    <div className="bg-[#121212]">
-      <AppProvider>
-        <QueryClientProvider client={queryClient}>
+    <div className="bg-[#F9FAFB]">
+      <QueryClientProvider client={queryClient}>
+        <AppProvider>
           <BrowserRouter>
             <Routes>
               <Route
@@ -23,6 +24,7 @@ function App() {
                   <AuthRequiredRoute>
                     <Routes>
                       <Route path="/" element={<Home />} />
+                      <Route path="/profile" element={<Profile />} />
                     </Routes>
                   </AuthRequiredRoute>
                 }
@@ -41,8 +43,8 @@ function App() {
               />
             </Routes>
           </BrowserRouter>
-        </QueryClientProvider>
-      </AppProvider>
+        </AppProvider>
+      </QueryClientProvider>
     </div>
   );
 }

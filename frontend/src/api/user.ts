@@ -1,4 +1,6 @@
 import axios from "axios";
+import type { ProfileDataType } from "../lib/Types";
+import { useAppContext } from "../lib/AppContext";
 
 type userData = {
   fullName: string;
@@ -26,37 +28,72 @@ type logInData = {
   password: string;
 };
 
+let baseUrl = import.meta.env.VITE_API_URL;
+
 export async function createUser(formData: userData) {
-  const response = await axios.post(
-    import.meta.env.VITE_API_URL + "/auth/signup",
-    formData
-  );
+  const response = await axios.post(baseUrl + "/auth/signup", formData);
   return response.data;
 }
 
 export async function setUpUserRole(formData: roleData) {
-  const response = await axios.put(
-    import.meta.env.VITE_API_URL + "/api/user/role",
-    formData
-  );
+  const response = await axios.put(baseUrl + "/api/user/role", formData);
   return response.data;
 }
-
 
 export async function verifyUser(formData: verifyData) {
-  const response = await axios.post(
-    import.meta.env.VITE_API_URL + "/auth/verify",
-    formData
+  const response = await axios.post(baseUrl + "/auth/verify", formData);
+  return response.data;
+}
+
+export async function authenticate(formData: logInData) {
+  const response = await axios.post(baseUrl + "/auth/login", formData);
+  return response.data;
+}
+
+export async function getAuthenticatedUser(token: String) {
+  const response = await axios.get(baseUrl + "/api/user/me", {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function updateProfileData(
+  data: ProfileDataType,
+  userId: number,
+  token: String
+) {
+  const response = await axios.put(
+    baseUrl + "/api/user/" + userId,
+    { ...data, updateType: "data" },
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
   );
   return response.data;
 }
 
-
-
-export async function authenticate(formData: logInData) {
-  const response = await axios.post(
-    import.meta.env.VITE_API_URL + "/auth/login",
-    formData
+export async function updateProfilePicture(
+  image: string,
+  userId: number,
+  token: string
+) {
+  const response = await axios.put(
+    baseUrl + "/api/user/image/" + userId,
+    {
+      image,
+    },
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
   );
   return response.data;
 }
