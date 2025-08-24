@@ -58,8 +58,11 @@ const Header = () => {
               {user?.username}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <Link to={`${user?.role.toLowerCase()}/dashboard`}>
+                <DropdownMenuItem className="cursor-pointer">
+                  Dashboard
+                </DropdownMenuItem>
+              </Link>
               <Link to={"/profile"}>
                 <DropdownMenuItem className="cursor-pointer">
                   Profile

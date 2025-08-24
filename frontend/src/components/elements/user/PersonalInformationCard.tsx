@@ -93,7 +93,7 @@ const PersonalInformationCard = ({
                 setProfileData({ ...profileData, role: e.target.value })
               }
             >
-              <option disabled={true} defaultValue={""}>
+              <option value="" selected={true}>
                 Select a role
               </option>
               <option value="NGO">NGO</option>

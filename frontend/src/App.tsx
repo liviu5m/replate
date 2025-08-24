@@ -9,6 +9,10 @@ import GoogleAuth from "./components/pages/GoogleAuth";
 import AuthRequiredRoute from "./components/middleware/AuthRequiredRoute";
 import NonAuthRequiredRoute from "./components/middleware/NonAuthRequiredRoute";
 import Profile from "./components/pages/Profile";
+import DonorDashboard from "./components/pages/donor/DonorDashboard";
+import DonorDonations from "./components/pages/donor/DonorDonations";
+import DonorAddDonation from "./components/pages/donor/DonorAddDonation";
+import DonorEditDonation from "./components/pages/donor/DonorEditDonation";
 
 function App() {
   const queryClient = new QueryClient();
@@ -25,6 +29,25 @@ function App() {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/profile" element={<Profile />} />
+                    </Routes>
+                  </AuthRequiredRoute>
+                }
+              />
+              <Route
+                path="/donor/*"
+                element={
+                  <AuthRequiredRoute>
+                    <Routes>
+                      <Route path="/dashboard" element={<DonorDashboard />} />
+                      <Route path="/donations" element={<DonorDonations />} />
+                      <Route
+                        path="/add-donation"
+                        element={<DonorAddDonation />}
+                      />
+                      <Route
+                        path="/edit-donation/:id"
+                        element={<DonorEditDonation />}
+                      />
                     </Routes>
                   </AuthRequiredRoute>
                 }

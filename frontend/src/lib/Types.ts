@@ -37,3 +37,22 @@ export type VerificationData = {
   documentUrl: string;
   userId: number;
 };
+
+export type DonationDto = {
+  name: string;
+  quantity: string;
+  unit: string;
+  expiryDate: string;
+  notes: string;
+  status: string;
+};
+
+export type Donation = {
+  id: number;
+  name: string;
+  quantity: number;
+  unit: string;
+  expiryDate: string;
+  notes: string;
+  status: string;
+};

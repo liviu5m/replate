@@ -4,7 +4,6 @@ import AddressInformationCard from "../elements/user/AddressInformationCard";
 import PasswordUserCard from "../elements/user/PasswordUserCard";
 import PersonalDataUser from "../elements/user/PersonalDataUser";
 import PersonalInformationCard from "../elements/user/PersonalInformationCard";
-import ProfileCompletion from "../elements/user/ProfileCompletion";
 import { faArrowLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import type { ProfileDataType } from "../../lib/Types";
@@ -12,11 +11,11 @@ import { useMutation } from "@tanstack/react-query";
 import { updateProfileData } from "../../api/user";
 import { useAppContext } from "../../lib/AppContext";
 import type { AxiosError } from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { Link } from "react-router-dom";
 
 const Profile = () => {
-  const { user, token } = useAppContext();
+  const { user, token, setUser } = useAppContext();
   const [profileData, setProfileData] = useState<ProfileDataType>({
     fullName: user?.fullName || "",
     username: user?.username || "",
@@ -38,6 +37,7 @@ const Profile = () => {
       updateProfileData(profileData, user?.id || -1, token || ""),
     mutationKey: ["profile"],
     onSuccess: (data) => {
+      setUser(data);
       console.log(data);
       toast.success("Successfully updated profile");
     },
@@ -75,7 +75,7 @@ const Profile = () => {
   return (
     <div className="flex items-center justify-center">
       <div className="absolute top-10 left-10">
-        <Link to={"/"} className="flex gap-4 items-center justify-center">
+        <Link to={"/"} className="flex gap-4 items-center justify-center font-semibold">
             <FontAwesomeIcon icon={faArrowLeft} />
             <span>Go Back</span>
         </Link>
@@ -111,6 +111,7 @@ const Profile = () => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

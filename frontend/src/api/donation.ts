@@ -1,0 +1,80 @@
+import axios from "axios";
+import type { DonationDto } from "../lib/Types";
+
+const baseUrl = import.meta.env.VITE_API_URL;
+
+export async function createDonation(
+  data: DonationDto,
+  donorId: number,
+  token: string
+) {
+  console.log(data);
+
+  const response = await axios.post(
+    `${baseUrl}/api/donation`,
+    { ...data, donorId },
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+export async function getAllDonations(
+  donorId: number,
+  token: string,
+  sorting: string
+) {
+  const response = await axios.get(`${baseUrl}/api/donation`, {
+    params: {
+      donorId,
+      sorting,
+    },
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function getDonationById(donationId: number, token: string) {
+  const response = await axios.get(`${baseUrl}/api/donation/${donationId}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function updateDonation(
+  donationDto: DonationDto,
+  donationId: number,
+  token: string
+) {
+  const response = await axios.put(
+    `${baseUrl}/api/donation/${donationId}`,
+    donationDto,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+export async function deleteDonation(donationId: number, token: string) {
+  const response = await axios.delete(`${baseUrl}/api/donation/${donationId}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
