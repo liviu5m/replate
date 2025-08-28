@@ -1,11 +1,7 @@
 import React, { useEffect } from "react";
 import type { Donation } from "../../../lib/Types";
 import { AlertCircleIcon, CalendarIcon, PackageIcon } from "lucide-react";
-import {
-  QueryClient,
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAppContext } from "../../../lib/AppContext";
 import { deleteDonation, updateDonation } from "../../../api/donation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +9,17 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 
-const DonationCard = ({ donation }: { donation: Donation }) => {
+const DonationCard = ({
+  donation,
+  role,
+  selectable = false,
+  handleCheckboxChange,
+}: {
+  donation: Donation;
+  role: string;
+  selectable?: boolean;
+  handleCheckboxChange?: (e: Donation) => boolean;
+}) => {
   const { token } = useAppContext();
   const queryClient = useQueryClient();
 
@@ -32,6 +38,23 @@ const DonationCard = ({ donation }: { donation: Donation }) => {
       console.log(err);
     },
   });
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "AVAILABLE":
+        return "lime-500";
+      case "WAITING":
+        return "yellow-500";
+      case "PENDING":
+        return "blue-500";
+      case "DELIVERED":
+        return "green-500";
+      case "EXPIRED":
+        return "red-500";
+      default:
+        return "gray-500";
+    }
+  };
 
   const { mutate: deleteDonationMutate } = useMutation({
     mutationKey: ["donation"],
@@ -108,9 +131,13 @@ const DonationCard = ({ donation }: { donation: Donation }) => {
         <CalendarIcon className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
         <span>Expires: {donation.expiryDate}</span>
       </div>
-      <div className="mt-2 flex items-center text-sm text-gray-500">
+      <div className={`mt-2 flex items-center text-sm text-gray-500 `}>
         <span className="font-medium">Status: </span>
-        <span className="ml-1 capitalize">{donation.status}</span>
+        <span
+          className={`ml-1 p-2 font-semibold text-xs rounded-md capitalize bg-${getStatusColor(donation.status)} text-white`}
+        >
+          {donation.status}
+        </span>
       </div>
       {donation.notes && (
         <div className="mt-2 text-sm text-gray-500">
@@ -118,19 +145,41 @@ const DonationCard = ({ donation }: { donation: Donation }) => {
           <span>{donation.notes}</span>
         </div>
       )}
-      <div className="absolute bottom-5 right-5">
-        <Link to={"/donor/edit-donation/" + donation.id}>
-          <FontAwesomeIcon
-            className="p-2 text-lg text-blue-500 cursor-pointer"
-            icon={faEdit}
+      {role == "ngo" && !selectable && (
+        <>
+          <div className="mt-2"></div>
+          <Link
+            to={"/ngo/available-food"}
+            className="p-2 rounded-sm bg-blue-500 text-white font-semibold text-xs mt-2 cursor-pointer hover:bg-blue-600"
+          >
+            Request Item
+          </Link>
+        </>
+      )}
+      {selectable && handleCheckboxChange && (
+        <div className="absolute top-2 right-2">
+          <input
+            type="checkbox"
+            className="w-4 h-4"
+            onChange={() => handleCheckboxChange(donation)}
           />
-        </Link>
-        <FontAwesomeIcon
-          className="p-2 text-lg text-red-500 cursor-pointer"
-          icon={faTrash}
-          onClick={() => deleteDonationFunc()}
-        />
-      </div>
+        </div>
+      )}
+      {role == "donor" && (
+        <div className="absolute bottom-5 right-5">
+          <Link to={"/donor/edit-donation/" + donation.id}>
+            <FontAwesomeIcon
+              className="p-2 text-lg text-blue-500 cursor-pointer"
+              icon={faEdit}
+            />
+          </Link>
+          <FontAwesomeIcon
+            className="p-2 text-lg text-red-500 cursor-pointer"
+            icon={faTrash}
+            onClick={() => deleteDonationFunc()}
+          />
+        </div>
+      )}
     </div>
   );
 };

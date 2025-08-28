@@ -1,9 +1,8 @@
 package com.replate.backend.enums;
 
-public enum DonationStatus {
-    AVAILABLE,
+public enum RequestStatus {
     WAITING,
     PENDING,
     DELIVERED,
-    EXPIRED
+    CANCELED,
 }

@@ -13,6 +13,12 @@ import DonorDashboard from "./components/pages/donor/DonorDashboard";
 import DonorDonations from "./components/pages/donor/DonorDonations";
 import DonorAddDonation from "./components/pages/donor/DonorAddDonation";
 import DonorEditDonation from "./components/pages/donor/DonorEditDonation";
+import NgoDashboard from "./components/pages/ngo/NgoDashboard";
+import NgoMyRequests from "./components/pages/ngo/NgoMyRequests";
+import NgoAvailableFood from "./components/pages/ngo/NgoAvailableFood";
+import DriverDashboard from "./components/pages/driver/DriverDashboard";
+import DriverAvailableRequests from "./components/pages/driver/DriverAvailableRequests";
+import DriverMyRequests from "./components/pages/driver/DriverMyRequests";
 
 function App() {
   const queryClient = new QueryClient();
@@ -47,6 +53,39 @@ function App() {
                       <Route
                         path="/edit-donation/:id"
                         element={<DonorEditDonation />}
+                      />
+                    </Routes>
+                  </AuthRequiredRoute>
+                }
+              />
+              <Route
+                path="/ngo/*"
+                element={
+                  <AuthRequiredRoute>
+                    <Routes>
+                      <Route path="/dashboard" element={<NgoDashboard />} />
+                      <Route
+                        path="/available-food"
+                        element={<NgoAvailableFood />}
+                      />
+                      <Route path="/my-requests" element={<NgoMyRequests />} />
+                    </Routes>
+                  </AuthRequiredRoute>
+                }
+              />
+              <Route
+                path="/driver/*"
+                element={
+                  <AuthRequiredRoute>
+                    <Routes>
+                      <Route path="/dashboard" element={<DriverDashboard />} />
+                      <Route
+                        path="/available-requests"
+                        element={<DriverAvailableRequests />}
+                      />
+                      <Route
+                        path="/my-requests"
+                        element={<DriverMyRequests />}
                       />
                     </Routes>
                   </AuthRequiredRoute>

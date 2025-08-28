@@ -55,4 +55,30 @@ export type Donation = {
   expiryDate: string;
   notes: string;
   status: string;
+  createdAt: string;
+};
+
+export type RequestDto = {
+  userId: number;
+  status: string;
+};
+
+export type Request = {
+  id: number;
+  user: User;
+  status: string;
+  createdAt: string;
+  requestDonations: RequestDonation[];
+};
+
+export type RequestDonationDto = {
+  requestId: number;
+  donationId: number;
+};
+
+export type RequestDonation = {
+  id: number;
+  request: Request;
+  donation: Donation;
+  createdAt: string;
 };

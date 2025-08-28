@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public interface DonationRepository extends JpaRepository<Donation, Long> {
 
-    List<Donation> findAllByUserId(Long donorId);
-    List<Donation> findAllByUserIdAndStatus(Long donorId, DonationStatus status);
-
-    String status(DonationStatus status);
+    List<Donation> findAllByDonorId(Long donorId);
+    List<Donation> findAllByDonorIdAndStatus(Long donorId, DonationStatus status);
+    List<Donation> findAllByDonorIdAndNameContainingIgnoreCase(Long donorId, String name);
+    List<Donation> findAllByDonorIdAndStatusAndNameContainingIgnoreCase(Long donorId, DonationStatus status, String name);
 }

@@ -1,5 +1,6 @@
 package com.replate.backend.config;
 
+import com.github.javafaker.Faker;
 import com.replate.backend.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,5 +44,10 @@ public class ApplicationConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
 
         return authProvider;
+    }
+
+    @Bean
+    public Faker faker() {
+        return new Faker();
     }
 }

@@ -6,16 +6,16 @@ import { useAppContext } from "../../../lib/AppContext";
 import {
   AlertCircleIcon,
   CheckCircleIcon,
-  ClipboardListIcon,
   PackageIcon,
   PlusIcon,
+  TruckIcon,
 } from "lucide-react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getAllDonations } from "../../../api/donation";
 import type { Donation } from "../../../lib/Types";
 import DonationCard from "../../elements/donor/DonationCard";
 
-const DonorDashboard = () => {
+const DriverDashboard = () => {
   const { user, token } = useAppContext();
 
   const { data, isPending } = useQuery({
@@ -31,7 +31,7 @@ const DonorDashboard = () => {
       <div className="container">
         <DashboardLayout>
           <div className="flex items-center justify-between p-5 bg-white border-b border-b-gray-400 h-20">
-            <h1 className="font-semibold text-lg">Donor Dashboard</h1>
+            <h1 className="font-semibold text-lg">Driver Dashboard</h1>
             <Link
               to={"/"}
               className="flex items-center justify-center gap-3 font-semibold"
@@ -55,55 +55,35 @@ const DonorDashboard = () => {
             </h1>
             <div className="mt-5 flex">
               <Link
-                to={"/donor/add-donation"}
-                className="text-white px-8 py-3 rounded-lg bg-blue-500 text-sm font-semibold hover:bg-blue-600 cursor-pointer"
+                to={"/driver/available-requests"}
+                className="text-white px-8 py-3 rounded-lg bg-blue-500 text-sm font-semibold hover:bg-blue-600 cursor-pointer flex items-center justify-center gap-4"
               >
-                <FontAwesomeIcon icon={faPlus} />
-                <span className="ml-4">Add New Donation</span>
+                <TruckIcon className="h-6 w-6 text-white" />
+                <span>Available Requests</span>
               </Link>
-              <Link to={"/donor/donations"} className="text-[#121212] px-8 py-3 rounded-lg bg-white text-sm font-semibold hover:bg-[#F9FAFB] cursor-pointer ml-5 flex items-center gap-4 border">
-                <PackageIcon className="h-5 w-5" />
-                <span>View All Donations</span>
+              <Link
+                to={"/driver/my-requests"}
+                className="text-[#121212] px-8 py-3 rounded-lg bg-white text-sm font-semibold hover:bg-[#F9FAFB] cursor-pointer ml-5 flex items-center gap-4 border"
+              >
+                <CheckCircleIcon className="h-6 w-6" />
+                <span>My Requests</span>
               </Link>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 m-10">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 m-10">
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
                   <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                    <PackageIcon className="h-6 w-6 text-white" />
+                    <TruckIcon className="h-6 w-6 text-white" />
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Donations
+                        Pending Deliveries
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {data ? data.length : 0}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                    <AlertCircleIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Pending
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "PENDING"
-                            ).length
-                          : 0}
+                        {/* {stats.pending} */} 0
                       </dd>
                     </dl>
                   </div>
@@ -119,14 +99,10 @@ const DonorDashboard = () => {
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Delivered
+                        Completed Deliveries
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "DELIVERED"
-                            ).length
-                          : 0}
+                        {/* {stats.completed} 0 */} 0
                       </dd>
                     </dl>
                   </div>
@@ -136,20 +112,16 @@ const DonorDashboard = () => {
             <div className="bg-white overflow-hidden shadow rounded-lg">
               <div className="p-5">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-red-500 rounded-md p-3">
-                    <AlertCircleIcon className="h-6 w-6 text-white" />
+                  <div className="flex-shrink-0 bg-purple-500 rounded-md p-3">
+                    <PackageIcon className="h-6 w-6 text-white" />
                   </div>
                   <div className="ml-5 w-0 flex-1">
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">
-                        Expired
+                        Total Items Delivered
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "EXPIRED"
-                            ).length
-                          : 0}
+                        {/* {stats.totalItems} */} 0
                       </dd>
                     </dl>
                   </div>
@@ -206,4 +178,4 @@ const DonorDashboard = () => {
   );
 };
 
-export default DonorDashboard;
+export default DriverDashboard;

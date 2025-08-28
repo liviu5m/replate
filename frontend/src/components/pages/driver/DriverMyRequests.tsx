@@ -6,7 +6,6 @@ import { useAppContext } from "../../../lib/AppContext";
 import {
   AlertCircleIcon,
   CheckCircleIcon,
-  ClipboardListIcon,
   PackageIcon,
   PlusIcon,
 } from "lucide-react";
@@ -15,7 +14,7 @@ import { getAllDonations } from "../../../api/donation";
 import type { Donation } from "../../../lib/Types";
 import DonationCard from "../../elements/donor/DonationCard";
 
-const DonorDashboard = () => {
+const DriverMyRequests = () => {
   const { user, token } = useAppContext();
 
   const { data, isPending } = useQuery({
@@ -31,7 +30,7 @@ const DonorDashboard = () => {
       <div className="container">
         <DashboardLayout>
           <div className="flex items-center justify-between p-5 bg-white border-b border-b-gray-400 h-20">
-            <h1 className="font-semibold text-lg">Donor Dashboard</h1>
+            <h1 className="font-semibold text-lg">Driver Dashboard</h1>
             <Link
               to={"/"}
               className="flex items-center justify-center gap-3 font-semibold"
@@ -55,16 +54,16 @@ const DonorDashboard = () => {
             </h1>
             <div className="mt-5 flex">
               <Link
-                to={"/donor/add-donation"}
+                to={"/driver/requests"}
                 className="text-white px-8 py-3 rounded-lg bg-blue-500 text-sm font-semibold hover:bg-blue-600 cursor-pointer"
               >
                 <FontAwesomeIcon icon={faPlus} />
                 <span className="ml-4">Add New Donation</span>
               </Link>
-              <Link to={"/donor/donations"} className="text-[#121212] px-8 py-3 rounded-lg bg-white text-sm font-semibold hover:bg-[#F9FAFB] cursor-pointer ml-5 flex items-center gap-4 border">
+              <button className="text-[#121212] px-8 py-3 rounded-lg bg-white text-sm font-semibold hover:bg-[#F9FAFB] cursor-pointer ml-5 flex items-center gap-4 border">
                 <PackageIcon className="h-5 w-5" />
                 <span>View All Donations</span>
-              </Link>
+              </button>
             </div>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 m-10">
@@ -206,4 +205,4 @@ const DonorDashboard = () => {
   );
 };
 
-export default DonorDashboard;
+export default DriverMyRequests;

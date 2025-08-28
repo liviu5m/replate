@@ -59,14 +59,14 @@ const roleSpecificLinks = {
   ],
   driver: [
     {
-      to: "/driver/assignments",
+      to: "/driver/available-requests",
       icon: <TruckIcon className="mr-3 h-5 w-5" />,
-      label: "My Assignments",
+      label: "Available Requests",
     },
     {
-      to: "/driver/completed",
+      to: "/driver/my-requests",
       icon: <ClipboardListIcon className="mr-3 h-5 w-5" />,
-      label: "Completed Deliveries",
+      label: "My Requests",
     },
   ],
 };

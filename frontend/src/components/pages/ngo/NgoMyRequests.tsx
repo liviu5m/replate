@@ -1,9 +1,19 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useAppContext } from "../../../lib/AppContext";
 import DashboardLayout from "../../layouts/DashboardLayout";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilter,
   faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import {
+  CheckCircleIcon,
+  PackageIcon,
+  ShoppingCartIcon,
+  TruckIcon,
+} from "lucide-react";
+import type { Request, RequestDonation } from "../../../lib/Types";
 import {
   Select,
   SelectContent,
@@ -11,33 +21,58 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
-import { PackageIcon } from "lucide-react";
-import { Link } from "react-router-dom";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getAllDonations } from "../../../api/donation";
-import { useAppContext } from "../../../lib/AppContext";
-import DonationCard from "../../elements/donor/DonationCard";
-import type { Donation } from "../../../lib/Types";
 import { useState } from "react";
+import { getAllRequests } from "../../../api/request";
+import RequestCard from "../../elements/RequestCard";
 
-const DonorDonations = () => {
-  const { token, user } = useAppContext();
+const NgoMyRequests = () => {
+  const { user, token } = useAppContext();
   const [sorting, setSorting] = useState("all");
 
   const { data, isPending } = useQuery({
-    queryKey: ["donations", sorting],
-    queryFn: () => getAllDonations(user?.id || -1, token || "", sorting, ""),
+    queryKey: ["request", sorting],
+    queryFn: () => getAllRequests(user?.id || -1, token || "", sorting),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
   });
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "WAITING":
+        return <ShoppingCartIcon className="h-5 w-5 text-yellow-500" />;
+      case "PENDING":
+        return <TruckIcon className="h-5 w-5 text-blue-500" />;
+      case "DELIVERED":
+        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+      case "CANCELED":
+        return <CheckCircleIcon className="h-5 w-5 text-red-500" />;
+      default:
+        return <ShoppingCartIcon className="h-5 w-5 text-gray-500" />;
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "WAITING":
+        return "yellow-500";
+      case "PENDING":
+        return "blue-500";
+      case "DELIVERED":
+        return "green-500";
+      case "CANCELED":
+        return "red-500";
+      default:
+        return "gray-500";
+    }
+  };
 
   return (
     <div className="flex items-center justify-center bg-white">
       <div className="container">
         <DashboardLayout>
           <div className="flex items-center justify-between p-5 bg-white border-b border-b-gray-400 h-20">
-            <h1 className="font-semibold text-lg">My Donations</h1>
+            <h1 className="font-semibold text-lg">My Requests</h1>
             <Link
               to={"/"}
               className="flex items-center justify-center gap-3 font-semibold"
@@ -46,6 +81,7 @@ const DonorDonations = () => {
               <span>Back</span>
             </Link>
           </div>
+
           <div className="m-10 p-8 rounded-lg bg-white shadow flex items-center justify-between">
             <h1 className="text-lg font-semibold">Your Donation History</h1>
             <div className="flex gap-2 items-center">
@@ -55,15 +91,14 @@ const DonorDonations = () => {
               />
               <Select value={sorting} onValueChange={(e) => setSorting(e)}>
                 <SelectTrigger className="w-[180px]">
-                  <SelectValue placeholder="All Donations" />
+                  <SelectValue placeholder="All Requests" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Donations</SelectItem>
-                  <SelectItem value="AVAILABLE">Available</SelectItem>
-                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="all">All Requests</SelectItem>
                   <SelectItem value="WAITING">Waiting</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
                   <SelectItem value="DELIVERED">Delivered</SelectItem>
-                  <SelectItem value="EXPIRED">Expired</SelectItem>
+                  <SelectItem value="CANCELED">Canceled</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -75,11 +110,9 @@ const DonorDonations = () => {
           ) : (
             <div>
               {data && data.length > 0 ? (
-                <div className="grid grid-cols-1 gap-10 m-10 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.map((donation: Donation, i: number) => {
-                    return (
-                      <DonationCard donation={donation} key={i} role="donor" />
-                    );
+                <div className="flex flex-col bg-white rounded-lg m-10 shadow">
+                  {data.map((request: Request, i: number) => {
+                    return <RequestCard request={request} key={i} />;
                   })}
                 </div>
               ) : (
@@ -99,4 +132,4 @@ const DonorDonations = () => {
   );
 };
 
-export default DonorDonations;
+export default NgoMyRequests;

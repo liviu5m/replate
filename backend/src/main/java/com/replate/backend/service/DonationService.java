@@ -22,9 +22,18 @@ public class DonationService {
         this.userRepository = userRepository;
     }
 
-    public List<Donation> findAllDonationByDonorId(Long donorId, String sorting) {
-        if(sorting.equals("all")) return donationRepository.findAllByUserId(donorId);
-        return donationRepository.findAllByUserIdAndStatus(donorId, DonationStatus.valueOf(sorting));
+    public List<Donation> findAllDonationByDonorId(Long donorId, String sorting, String search) {
+        if (search == null || search.trim().isEmpty() || search.equals("all")) {
+            if (sorting.equals("all")) {
+                return donationRepository.findAllByDonorId(donorId);
+            }
+            return donationRepository.findAllByDonorIdAndStatus(donorId, DonationStatus.valueOf(sorting));
+        } else {
+            if (sorting.equals("all")) {
+                return donationRepository.findAllByDonorIdAndNameContainingIgnoreCase(donorId, search.trim());
+            }
+            return donationRepository.findAllByDonorIdAndStatusAndNameContainingIgnoreCase(donorId, DonationStatus.valueOf(sorting), search.trim());
+        }
     }
 
     public Optional<Donation> findDonationById(Long id) {
@@ -35,7 +44,7 @@ public class DonationService {
         try {
             User donor = userRepository.findById(donationDto.getDonorId()).orElseThrow(() -> new RuntimeException("User not found"));
             Donation donation = new Donation(donationDto.getName(), donationDto.getQuantity(), donationDto.getUnit(), donationDto.getExpiryDate(), donationDto.getNotes());
-            donation.setUser(donor);
+            donation.setDonor(donor);
             return donationRepository.save(donation);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());

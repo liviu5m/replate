@@ -26,12 +26,14 @@ export async function createDonation(
 export async function getAllDonations(
   donorId: number,
   token: string,
-  sorting: string
+  sorting: string,
+  search: string
 ) {
   const response = await axios.get(`${baseUrl}/api/donation`, {
     params: {
       donorId,
       sorting,
+      search: search,
     },
     headers: {
       Authorization: "Bearer " + token,
