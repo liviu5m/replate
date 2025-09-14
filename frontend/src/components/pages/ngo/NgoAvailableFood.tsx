@@ -33,6 +33,7 @@ const NgoAvailableFood = () => {
   const queryClient = useQueryClient();
 
   const handleCheckboxChange = (donation: Donation) => {
+    if(isCreating || isCreatingDonation) return;
     setSelectedDonations((prev: Set<Donation>) => {
       const newSet = new Set(prev);
       if (newSet.has(donation)) {
@@ -48,13 +49,13 @@ const NgoAvailableFood = () => {
   const { data, isPending } = useQuery({
     queryKey: ["donations", search],
     queryFn: () =>
-      getAllDonations(user?.id || -1, token || "", "AVAILABLE", search),
+      getAllDonations(token || "", "AVAILABLE", search),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
   });
 
-  const { mutate: createRequestDonation } = useMutation({
+  const { mutate: createRequestDonation, isPending: isCreatingDonation } = useMutation({
     mutationKey: ["request-donation"],
     mutationFn: (data: RequestDonationDto) =>
       createRequestDonationApi(data, token || ""),
@@ -65,6 +66,7 @@ const NgoAvailableFood = () => {
         .forEach((checkbox) => {
           (checkbox as HTMLInputElement).checked = false;
         });
+      
     },
     onError: (err) => {
       console.log(err);
@@ -89,11 +91,11 @@ const NgoAvailableFood = () => {
     },
   });
 
-  const { mutate: createRequest } = useMutation({
+  const { mutate: createRequest, isPending: isCreating } = useMutation({
     mutationKey: ["request"],
     mutationFn: () =>
       createRequestApi(
-        { userId: user?.id || -1, status: "WAITING" },
+        { ngoId: user?.id || -1, status: "WAITING" },
         token || ""
       ),
     onSuccess: (data) => {
@@ -154,11 +156,16 @@ const NgoAvailableFood = () => {
                     ? "bg-blue-200 text-white hover:bg-blue-300 "
                     : "bg-blue-500 text-white hover:bg-blue-600"
                 }`}
-                disabled={selectDonations.size == 0}
+                disabled={selectDonations.size == 0 || isCreating}
                 onClick={() => createRequestFunc()}
               >
                 <ShoppingCartIcon className="w-5 h-5" />
-                <span>Request Selected ({selectDonations.size})</span>
+                <span className="flex items-center justify-center gap-2">
+                  Request Selected ({selectDonations.size}){" "}
+                  {isCreating && (
+                    <div className="w-5 h-5 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+                  )}
+                </span>
               </button>
             </div>
           </div>

@@ -22,6 +22,20 @@ public class DonationService {
         this.userRepository = userRepository;
     }
 
+    public List<Donation> findAllDonation(String sorting, String search) {
+        if (search == null || search.trim().isEmpty() || search.equals("all")) {
+            if (sorting.equals("all")) {
+                return donationRepository.findAll();
+            }
+            return donationRepository.findAllByStatus(DonationStatus.valueOf(sorting));
+        } else {
+            if (sorting.equals("all")) {
+                return donationRepository.findAllByNameContainingIgnoreCase(search.trim());
+            }
+            return donationRepository.findAllByStatusAndNameContainingIgnoreCase(DonationStatus.valueOf(sorting), search.trim());
+        }
+    }
+
     public List<Donation> findAllDonationByDonorId(Long donorId, String sorting, String search) {
         if (search == null || search.trim().isEmpty() || search.equals("all")) {
             if (sorting.equals("all")) {

@@ -25,7 +25,12 @@ public class DonationController {
     }
 
     @GetMapping
-    public List<Donation> getDonations(@RequestParam Long donorId,@RequestParam String sorting, @RequestParam String search) {
+    public List<Donation> getDonations(@RequestParam String sorting, @RequestParam String search) {
+        return donationService.findAllDonation(sorting, search);
+    }
+
+    @GetMapping("/donor/{donorId}")
+    public List<Donation> getDonations(@PathVariable Long donorId, @RequestParam String sorting, @RequestParam String search) {
         return donationService.findAllDonationByDonorId(donorId, sorting, search);
     }
 

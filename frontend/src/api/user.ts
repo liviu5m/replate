@@ -31,6 +31,8 @@ type logInData = {
 let baseUrl = import.meta.env.VITE_API_URL;
 
 export async function createUser(formData: userData) {
+  console.log(formData);
+
   const response = await axios.post(baseUrl + "/auth/signup", formData);
   return response.data;
 }
@@ -95,5 +97,51 @@ export async function updateProfilePicture(
       withCredentials: true,
     }
   );
+  return response.data;
+}
+
+export async function getAllUsersBesidesAuthenticatedOne(
+  userId: number,
+  token: string,
+  username: string
+) {
+  const response = await axios.get(
+    import.meta.env.VITE_API_URL + "/api/user/available",
+    {
+      params: {
+        userId,
+        username,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+export async function getAllUsersConversation(userId: number, token: string) {
+  const response = await axios.get(
+    import.meta.env.VITE_API_URL + "/api/message/users",
+    {
+      params: {
+        userId,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
+  );
+  return response.data;
+}
+
+export async function getUserByEmail(userEmail: string, token: string) {
+  const response = await axios.get(`${baseUrl}/api/user/${userEmail}`, {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  });
   return response.data;
 }

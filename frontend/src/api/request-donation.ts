@@ -15,3 +15,15 @@ export async function createRequestDonationApi(
   });
   return response.data;
 }
+
+export async function deleteRequestDonations(requestId: number, token: string) {
+  const response = await axios.delete(
+    `${baseUrl}/api/request-donation/request/${requestId}`,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.data;
+}

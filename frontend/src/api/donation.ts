@@ -24,14 +24,31 @@ export async function createDonation(
 }
 
 export async function getAllDonations(
-  donorId: number,
   token: string,
   sorting: string,
   search: string
 ) {
   const response = await axios.get(`${baseUrl}/api/donation`, {
     params: {
-      donorId,
+      sorting,
+      search: search,
+    },
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+    withCredentials: true,
+  });
+  return response.data;
+}
+
+export async function getAllDonationsByDonorId(
+  donorId: number,
+  token: string,
+  sorting: string,
+  search: string
+) {
+  const response = await axios.get(`${baseUrl}/api/donation/donor/${donorId}`, {
+    params: {
       sorting,
       search: search,
     },
@@ -60,7 +77,7 @@ export async function updateDonation(
 ) {
   const response = await axios.put(
     `${baseUrl}/api/donation/${donationId}`,
-    donationDto,
+    { ...donationDto, quantity: Number(donationDto.quantity) },
     {
       headers: {
         Authorization: "Bearer " + token,

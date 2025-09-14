@@ -14,7 +14,7 @@ import {
 import { PackageIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getAllDonations } from "../../../api/donation";
+import { getAllDonations, getAllDonationsByDonorId } from "../../../api/donation";
 import { useAppContext } from "../../../lib/AppContext";
 import DonationCard from "../../elements/donor/DonationCard";
 import type { Donation } from "../../../lib/Types";
@@ -26,7 +26,7 @@ const DonorDonations = () => {
 
   const { data, isPending } = useQuery({
     queryKey: ["donations", sorting],
-    queryFn: () => getAllDonations(user?.id || -1, token || "", sorting, ""),
+    queryFn: () => getAllDonationsByDonorId(user?.id || -1, token || "", sorting, ""),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,

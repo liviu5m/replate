@@ -11,22 +11,32 @@ import {
   TruckIcon,
 } from "lucide-react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getAllDonations } from "../../../api/donation";
-import type { Donation } from "../../../lib/Types";
-import DonationCard from "../../elements/donor/DonationCard";
+import { getAllRequests, getAllRequestsByDriverId } from "../../../api/request";
+import Loader from "../../elements/Loader";
+import type { Request } from "../../../lib/Types";
+import RequestCard from "../../elements/RequestCard";
 
 const DriverDashboard = () => {
   const { user, token } = useAppContext();
 
-  const { data, isPending } = useQuery({
-    queryKey: ["donations"],
-    queryFn: () => getAllDonations(user?.id || -1, token || "", "all", ""),
+  const { data: requests, isPending } = useQuery({
+    queryKey: ["request"],
+    queryFn: () => getAllRequestsByDriverId(token || "", user?.id || -1, "all"),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
   });
 
-  return (
+  const { data: availableRequests, isPending: isPendingRequests } = useQuery({
+    queryKey: ["request-available"],
+    queryFn: () => getAllRequests(-1, token || "", "WAITING"),
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+  });
+
+  return isPending || isPendingRequests ? (
+    <Loader />
+  ) : (
     <div className="flex items-center justify-center bg-white">
       <div className="container">
         <DashboardLayout>
@@ -83,7 +93,11 @@ const DriverDashboard = () => {
                         Pending Deliveries
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {/* {stats.pending} */} 0
+                        {
+                          requests.filter(
+                            (request: Request) => request.status == "PENDING"
+                          ).length
+                        }
                       </dd>
                     </dl>
                   </div>
@@ -102,7 +116,11 @@ const DriverDashboard = () => {
                         Completed Deliveries
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {/* {stats.completed} 0 */} 0
+                        {
+                          requests.filter(
+                            (request: Request) => request.status == "DELIVERED"
+                          ).length
+                        }
                       </dd>
                     </dl>
                   </div>
@@ -121,7 +139,11 @@ const DriverDashboard = () => {
                         Total Items Delivered
                       </dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {/* {stats.totalItems} */} 0
+                        {requests.reduce(
+                          (sum: number, request: Request) =>
+                            (sum += request.requestDonations.length),
+                          0
+                        )}
                       </dd>
                     </dl>
                   </div>
@@ -135,21 +157,17 @@ const DriverDashboard = () => {
                 Recent Donations
               </h3>
               <Link
-                to="/donor/donations"
+                to="/driver/available-requests"
                 className="text-sm font-medium text-blue-600 hover:text-blue-500"
               >
                 View all
               </Link>
             </div>
             <div className="p-4 w-full">
-              {data && data.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.slice(0, 3).map((donation: Donation, i: number) => {
-                    return (
-                      <DonationCard donation={donation} key={i} role="donor" />
-                    );
-                  })}
-                </div>
+              {availableRequests.length > 0 ? (
+                availableRequests.slice(0, 3).map((request: Request) => {
+                  return <RequestCard request={request} role="driver" />;
+                })
               ) : (
                 <div className="text-center py-8">
                   <PackageIcon className="mx-auto h-12 w-12 text-gray-400" />

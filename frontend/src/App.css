@@ -204,3 +204,13 @@
     height: 40px;
   }
 }
+
+.remove-scrollbar {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none; 
+}
+
+.remove-scrollbar::-webkit-scrollbar {
+  display: none; 
+}

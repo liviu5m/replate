@@ -3,6 +3,7 @@ package com.replate.backend.controller;
 import com.replate.backend.dto.RequestDonationDto;
 import com.replate.backend.model.RequestDonation;
 import com.replate.backend.service.RequestDonationService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,8 +39,4 @@ public class RequestDonationController {
         return requestDonationService.updateRequestDonation(requestDonationDto, id);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteRequestDonation(@PathVariable Long id) {
-        requestDonationService.deleteRequestDonation(id);
-    }
 }

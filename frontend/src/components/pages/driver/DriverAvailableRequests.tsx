@@ -14,7 +14,7 @@ const DriverAvailableRequests = () => {
 
   const { data, isPending } = useQuery({
     queryKey: ["request"],
-    queryFn: () => getAllRequests(user?.id || -1, token || "", "WAITING"),
+    queryFn: () => getAllRequests(-1, token || "", "WAITING"),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
@@ -48,16 +48,21 @@ const DriverAvailableRequests = () => {
                 <div className="flex flex-col bg-white rounded-lg m-10 shadow">
                   {data.map((request: Request, i: number) => {
                     return (
-                      <RequestCard request={request} key={i} action={true} />
+                      <RequestCard
+                        request={request}
+                        key={i}
+                        action={true}
+                        role="driver"
+                      />
                     );
                   })}
                 </div>
               ) : (
                 <div className="m-10 p-8 rounded-lg bg-white shadow flex items-center justify-between flex-col gap-3">
                   <PackageIcon className="h-20 w-20 text-gray-400" />
-                  <h2 className="font-semibold text-sm">No donations found</h2>
+                  <h2 className="font-semibold text-sm">No Available Requests</h2>
                   <p className="text-gray-400 text-sm">
-                    You haven't made any donations yet.
+                    Wait for available requests
                   </p>
                 </div>
               )}

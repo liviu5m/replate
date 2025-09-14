@@ -1,4 +1,5 @@
 package com.replate.backend.config;
+import com.replate.backend.handlers.OAuth2LoginSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

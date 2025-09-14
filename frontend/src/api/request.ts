@@ -16,7 +16,7 @@ export async function createRequestApi(data: RequestDto, token: string) {
 export async function getAllRequests(
   ngoId: number,
   token: string,
-  sorting: string,
+  sorting: string
 ) {
   const response = await axios.get(`${baseUrl}/api/request`, {
     params: {
@@ -28,5 +28,42 @@ export async function getAllRequests(
     },
     withCredentials: true,
   });
+  return response.data;
+}
+
+export async function updateRequestStatus(
+  token: string,
+  requestDto: RequestDto,
+  requestId: number
+) {
+  const response = await axios.put(
+    `${baseUrl}/api/request/${requestId}`,
+    requestDto,
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+  return response.data;
+}
+
+export async function getAllRequestsByDriverId(
+  token: string,
+  driverId: number,
+  sorting: string
+) {
+  const response = await axios.get(
+    `${baseUrl}/api/request/driver/${driverId}`,
+    {
+      params: {
+        sorting,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+      withCredentials: true,
+    }
+  );
   return response.data;
 }

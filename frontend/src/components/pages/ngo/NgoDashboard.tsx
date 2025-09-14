@@ -8,13 +8,13 @@ import { faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import {
   CheckCircleIcon,
   PackageIcon,
-  PlusIcon,
   ShoppingCartIcon,
   TruckIcon,
 } from "lucide-react";
-import type { Donation, Request, RequestDonation } from "../../../lib/Types";
+import type { Donation, Request } from "../../../lib/Types";
 import DonationCard from "../../elements/donor/DonationCard";
 import { getAllRequests } from "../../../api/request";
+import RequestCard from "../../elements/RequestCard";
 
 const NgoDashboard = () => {
   const { user, token } = useAppContext();
@@ -22,7 +22,7 @@ const NgoDashboard = () => {
   const { data, isPending } = useQuery({
     queryKey: ["donations"],
     queryFn: () =>
-      getAllDonations(user?.id || -1, token || "", "AVAILABLE", ""),
+      getAllDonations(token || "", "AVAILABLE", ""),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
@@ -36,35 +36,8 @@ const NgoDashboard = () => {
     placeholderData: keepPreviousData,
   });
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "WAITING":
-        return <ShoppingCartIcon className="h-5 w-5 text-yellow-500" />;
-      case "PENDING":
-        return <TruckIcon className="h-5 w-5 text-blue-500" />;
-      case "DELIVERED":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
-      case "CANCELED":
-        return <CheckCircleIcon className="h-5 w-5 text-red-500" />;
-      default:
-        return <ShoppingCartIcon className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "WAITING":
-        return "yellow-500";
-      case "PENDING":
-        return "blue-500";
-      case "DELIVERED":
-        return "green-500";
-      case "CANCELED":
-        return "red-500";
-      default:
-        return "gray-500";
-    }
-  };
+  console.log(requestsData);
+  
 
   return (
     <div className="flex items-center justify-center bg-white">
@@ -220,7 +193,7 @@ const NgoDashboard = () => {
             <div className="p-4 w-full">
               {data && data.length > 0 ? (
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.slice(0, 4).map((donation: Donation, i: number) => {
+                  {data.slice(0, 3).map((donation: Donation, i: number) => {
                     return (
                       <DonationCard donation={donation} key={i} role="ngo" />
                     );
@@ -258,88 +231,9 @@ const NgoDashboard = () => {
                 <div>
                   {requestsData && requestsData.length > 0 ? (
                     <div className="flex flex-col bg-white rounded-lg shadow">
-                      {requestsData.map((request: Request, i: number) => {
+                      {requestsData.slice(0,3).map((request: Request, i: number) => {
                         return (
-                          <div
-                            key={i}
-                            className="w-full border-b border-b-gray-200"
-                          >
-                            <div className="px-4 py-5 sm:px-6 w-full">
-                              <div className="flex items-center justify-between w-full">
-                                <div className="flex items-center">
-                                  {getStatusIcon(request.status)}
-                                  <p className="text-sm font-medium ml-2 text-gray-900">
-                                    Request #{request.id}
-                                  </p>
-                                </div>
-                                <div className="ml-2 flex-shrink-0">
-                                  <span
-                                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${getStatusColor(
-                                      request.status
-                                    )}`}
-                                  >
-                                    {request.status}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="mt-2">
-                                <p className="text-sm text-gray-500">
-                                  <span className="font-medium">
-                                    Requested:
-                                  </span>{" "}
-                                  {request.createdAt.slice(0, 10)}
-                                </p>
-                                {/* {request.pickupDate && (
-                                            <p className="text-sm text-gray-500">
-                                              <span className="font-medium">
-                                                Pickup Date:
-                                              </span>{" "}
-                                              {formatDate(request.pickupDate)}
-                                            </p>
-                                          )}
-                                          {request.deliveryDate && (
-                                            <p className="text-sm text-gray-500">
-                                              <span className="font-medium">
-                                                Delivery Date:
-                                              </span>{" "}
-                                              {formatDate(request.deliveryDate)}
-                                            </p>
-                                          )} */}
-                              </div>
-                              <div className="mt-2">
-                                <p className="text-sm text-gray-500">
-                                  <span className="font-medium">Items:</span>{" "}
-                                  {request.requestDonations.length} items
-                                </p>
-                                <div className="text-sm text-gray-500 mt-1 line-clamp-2">
-                                  {request.requestDonations.map(
-                                    (requestDonation: RequestDonation, i) => {
-                                      return (
-                                        <div key={i}>
-                                          <h2>
-                                            {requestDonation.donation.name} ({" "}
-                                            {requestDonation.donation.quantity}{" "}
-                                            {requestDonation.donation.unit} )
-                                          </h2>
-                                        </div>
-                                      );
-                                    }
-                                  )}
-                                </div>
-                              </div>
-                              {/* {driver && (
-                                          <div className="mt-2 border-t border-gray-200 pt-2">
-                                            <p className="text-sm font-medium text-gray-900">
-                                              Driver Information
-                                            </p>
-                                            <p className="text-sm text-gray-500">
-                                              {driver.name}{" "}
-                                              {driver.phone && `• ${driver.phone}`}
-                                            </p>
-                                          </div>
-                                        )} */}
-                            </div>
-                          </div>
+                          <RequestCard request={request} key={i} role="ngo" />
                         );
                       })}
                     </div>

@@ -19,6 +19,7 @@ import NgoAvailableFood from "./components/pages/ngo/NgoAvailableFood";
 import DriverDashboard from "./components/pages/driver/DriverDashboard";
 import DriverAvailableRequests from "./components/pages/driver/DriverAvailableRequests";
 import DriverMyRequests from "./components/pages/driver/DriverMyRequests";
+import Chat from "./components/pages/Chat";
 
 function App() {
   const queryClient = new QueryClient();
@@ -35,6 +36,7 @@ function App() {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/profile" element={<Profile />} />
+                      <Route path="/chat" element={<Chat />} />
                     </Routes>
                   </AuthRequiredRoute>
                 }

@@ -59,16 +59,22 @@ export type Donation = {
 };
 
 export type RequestDto = {
-  userId: number;
+  ngoId: number;
   status: string;
+  deliveryDate?: Date;
+  pickupDate?: Date;
+  driverId?: number;
 };
 
 export type Request = {
   id: number;
-  user: User;
+  ngo: User;
   status: string;
   createdAt: string;
   requestDonations: RequestDonation[];
+  pickupDate: string;
+  deliveryDate: string;
+  driver: User;
 };
 
 export type RequestDonationDto = {
@@ -80,5 +86,19 @@ export type RequestDonation = {
   id: number;
   request: Request;
   donation: Donation;
+  createdAt: string;
+};
+
+export type MessageDto = {
+  senderId: number;
+  receiverId: number;
+  text: string;
+};
+
+export type Message = {
+  id: number;
+  sender: User;
+  receiver: User;
+  text: string;
   createdAt: string;
 };

@@ -37,36 +37,6 @@ const NgoMyRequests = () => {
     placeholderData: keepPreviousData,
   });
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "WAITING":
-        return <ShoppingCartIcon className="h-5 w-5 text-yellow-500" />;
-      case "PENDING":
-        return <TruckIcon className="h-5 w-5 text-blue-500" />;
-      case "DELIVERED":
-        return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
-      case "CANCELED":
-        return <CheckCircleIcon className="h-5 w-5 text-red-500" />;
-      default:
-        return <ShoppingCartIcon className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "WAITING":
-        return "yellow-500";
-      case "PENDING":
-        return "blue-500";
-      case "DELIVERED":
-        return "green-500";
-      case "CANCELED":
-        return "red-500";
-      default:
-        return "gray-500";
-    }
-  };
-
   return (
     <div className="flex items-center justify-center bg-white">
       <div className="container">
@@ -97,6 +67,7 @@ const NgoMyRequests = () => {
                   <SelectItem value="all">All Requests</SelectItem>
                   <SelectItem value="WAITING">Waiting</SelectItem>
                   <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="ASKING">Asking</SelectItem>
                   <SelectItem value="DELIVERED">Delivered</SelectItem>
                   <SelectItem value="CANCELED">Canceled</SelectItem>
                 </SelectContent>
@@ -112,7 +83,7 @@ const NgoMyRequests = () => {
               {data && data.length > 0 ? (
                 <div className="flex flex-col bg-white rounded-lg m-10 shadow">
                   {data.map((request: Request, i: number) => {
-                    return <RequestCard request={request} key={i} />;
+                    return <RequestCard request={request} key={i} role="ngo" />;
                   })}
                 </div>
               ) : (

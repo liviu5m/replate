@@ -11,7 +11,7 @@ import {
   PlusIcon,
 } from "lucide-react";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getAllDonations } from "../../../api/donation";
+import { getAllDonations, getAllDonationsByDonorId } from "../../../api/donation";
 import type { Donation } from "../../../lib/Types";
 import DonationCard from "../../elements/donor/DonationCard";
 
@@ -20,7 +20,7 @@ const DonorDashboard = () => {
 
   const { data, isPending } = useQuery({
     queryKey: ["donations"],
-    queryFn: () => getAllDonations(user?.id || -1, token || "", "all", ""),
+    queryFn: () => getAllDonationsByDonorId(user?.id || -1, token || "", "all", ""),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,

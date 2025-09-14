@@ -56,9 +56,15 @@ public class UserController {
         }
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
+        List<User> users = userService.allUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<User>> allUsersWithoutAuthenticated(@RequestParam("userId") Long userId,@RequestParam("username") String username) {
+        List<User> users = userService.allUsersWithoutAuthenticated(userId, username);
         return ResponseEntity.ok(users);
     }
 
@@ -109,5 +115,11 @@ public class UserController {
             System.out.println(e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
+        Optional<User> user = userService.findUserByEmail(email);
+        return ResponseEntity.ok(user);
     }
 }

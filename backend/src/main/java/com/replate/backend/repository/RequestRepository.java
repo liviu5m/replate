@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request,Long> {
+    List<Request> findAllByStatus(RequestStatus status);
+    List<Request> findAllByDriverId(Long driverId);
     List<Request> findAllByNgoId(Long ngoId);
-    List<Request> findAllByNgoIdAndStatus(Long ngoId, RequestStatus status);
+    List<Request> findAllByDriverIdAndStatus(Long driverId, RequestStatus sorting);
+    List<Request> findAllByNgoIdAndStatus(Long ngoId, RequestStatus sorting);
 }

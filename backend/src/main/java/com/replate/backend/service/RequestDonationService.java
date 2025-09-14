@@ -7,6 +7,7 @@ import com.replate.backend.model.RequestDonation;
 import com.replate.backend.repository.DonationRepository;
 import com.replate.backend.repository.RequestDonationRepository;
 import com.replate.backend.repository.RequestRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,8 +52,6 @@ public class RequestDonationService {
         return requestDonationRepository.save(requestDonation);
     }
 
-    public void deleteRequestDonation(Long id) {
-        requestDonationRepository.deleteById(id);
-    }
+
 
 }

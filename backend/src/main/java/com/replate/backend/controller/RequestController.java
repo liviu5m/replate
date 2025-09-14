@@ -3,6 +3,7 @@ package com.replate.backend.controller;
 import com.replate.backend.dto.RequestDto;
 import com.replate.backend.model.Request;
 import com.replate.backend.service.RequestService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +20,13 @@ public class RequestController {
     }
 
     @GetMapping
-    public List<Request> getRequests(@RequestParam Long ngoId,@RequestParam String sorting) {
-        return requestService.getRequests(ngoId, sorting);
+    public List<Request> getRequests(@RequestParam String sorting, @RequestParam Long ngoId) {
+        return requestService.getRequestsByNgoId(sorting, ngoId);
+    }
+
+    @GetMapping("/driver/{driverId}")
+    public List<Request> getRequestsByDriverId(@PathVariable Long driverId, @RequestParam String sorting) {
+        return requestService.getRequestsByDriverId(driverId, sorting);
     }
 
     @GetMapping("/{id}")
@@ -34,8 +40,13 @@ public class RequestController {
     }
 
     @PutMapping("/{id}")
-    public Request updateRequest(@PathVariable Long id, @RequestBody RequestDto requestDto) {
-        return requestService.updateRequest(requestDto, id);
+    public ResponseEntity<?> updateRequest(@PathVariable Long id, @RequestBody RequestDto requestDto) {
+        try {
+            Request request = requestService.updateRequest(requestDto, id);
+            return ResponseEntity.ok(request);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")

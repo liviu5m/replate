@@ -1,4 +1,4 @@
-package com.replate.backend.config;
+package com.replate.backend.handlers;
 
 import com.replate.backend.enums.UserRole;
 import com.replate.backend.model.User;
@@ -7,7 +7,6 @@ import com.replate.backend.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -20,8 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.Optional;
 
 @Component

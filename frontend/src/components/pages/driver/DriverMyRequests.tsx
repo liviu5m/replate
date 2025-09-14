@@ -1,36 +1,51 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DashboardLayout from "../../layouts/DashboardLayout";
-import { faPlus, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useAppContext } from "../../../lib/AppContext";
+import DashboardLayout from "../../layouts/DashboardLayout";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  AlertCircleIcon,
+  faFilter,
+  faRightFromBracket,
+} from "@fortawesome/free-solid-svg-icons";
+import {
   CheckCircleIcon,
   PackageIcon,
-  PlusIcon,
+  ShoppingCartIcon,
+  TruckIcon,
 } from "lucide-react";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { getAllDonations } from "../../../api/donation";
-import type { Donation } from "../../../lib/Types";
-import DonationCard from "../../elements/donor/DonationCard";
+import type { Request, RequestDonation } from "../../../lib/Types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../ui/select";
+import { useState } from "react";
+import { getAllRequestsByDriverId } from "../../../api/request";
+import RequestCard from "../../elements/RequestCard";
 
-const DriverMyRequests = () => {
+const NgoMyRequests = () => {
   const { user, token } = useAppContext();
+  const [sorting, setSorting] = useState("all");
 
   const { data, isPending } = useQuery({
-    queryKey: ["donations"],
-    queryFn: () => getAllDonations(user?.id || -1, token || "", "all", ""),
+    queryKey: ["request", sorting],
+    queryFn: () =>
+      getAllRequestsByDriverId(token || "", user?.id || -1, sorting),
     refetchOnWindowFocus: false,
     staleTime: 0,
     placeholderData: keepPreviousData,
   });
+
+  console.log(data);
 
   return (
     <div className="flex items-center justify-center bg-white">
       <div className="container">
         <DashboardLayout>
           <div className="flex items-center justify-between p-5 bg-white border-b border-b-gray-400 h-20">
-            <h1 className="font-semibold text-lg">Driver Dashboard</h1>
+            <h1 className="font-semibold text-lg">My Requests</h1>
             <Link
               to={"/"}
               className="flex items-center justify-center gap-3 font-semibold"
@@ -39,170 +54,58 @@ const DriverMyRequests = () => {
               <span>Back</span>
             </Link>
           </div>
-          <div className="m-10 p-8 rounded-lg bg-white shadow">
-            <h1 className="text-xl font-bold mb-3">
-              Welcome, {user?.fullName} !
-            </h1>
-            <p className="text-gray-400">
-              Thank you for your contributions to reducing food waste and
-              helping those in need.
-            </p>
-          </div>
-          <div className="m-10 p-8 rounded-lg bg-[#EFF6FF] shadow">
-            <h1 className="text-blue-500 text-xl font-semibold">
-              Quick Actions
-            </h1>
-            <div className="mt-5 flex">
-              <Link
-                to={"/driver/requests"}
-                className="text-white px-8 py-3 rounded-lg bg-blue-500 text-sm font-semibold hover:bg-blue-600 cursor-pointer"
-              >
-                <FontAwesomeIcon icon={faPlus} />
-                <span className="ml-4">Add New Donation</span>
-              </Link>
-              <button className="text-[#121212] px-8 py-3 rounded-lg bg-white text-sm font-semibold hover:bg-[#F9FAFB] cursor-pointer ml-5 flex items-center gap-4 border">
-                <PackageIcon className="h-5 w-5" />
-                <span>View All Donations</span>
-              </button>
+
+          <div className="m-10 p-8 rounded-lg bg-white shadow flex items-center justify-between">
+            <h1 className="text-lg font-semibold">Requests</h1>
+            <div className="flex gap-2 items-center">
+              <FontAwesomeIcon
+                icon={faFilter}
+                className="text-gray-400 mr-5 text-lg"
+              />
+              <Select value={sorting} onValueChange={(e) => setSorting(e)}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="All Requests" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Requests</SelectItem>
+                  <SelectItem value="WAITING">Waiting</SelectItem>
+                  <SelectItem value="PENDING">Pending</SelectItem>
+                  <SelectItem value="ASKING">Asking</SelectItem>
+                  <SelectItem value="DELIVERED">Delivered</SelectItem>
+                  <SelectItem value="CANCELED">Canceled</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 m-10">
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                    <PackageIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Total Donations
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {data ? data.length : 0}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
+          {isPending ? (
+            <div className="flex items-center justify-center">
+              <div className="w-30 h-30 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
             </div>
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                    <AlertCircleIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Pending
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "PENDING"
-                            ).length
-                          : 0}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-green-500 rounded-md p-3">
-                    <CheckCircleIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Delivered
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "DELIVERED"
-                            ).length
-                          : 0}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="bg-white overflow-hidden shadow rounded-lg">
-              <div className="p-5">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 bg-red-500 rounded-md p-3">
-                    <AlertCircleIcon className="h-6 w-6 text-white" />
-                  </div>
-                  <div className="ml-5 w-0 flex-1">
-                    <dl>
-                      <dt className="text-sm font-medium text-gray-500 truncate">
-                        Expired
-                      </dt>
-                      <dd className="text-lg font-medium text-gray-900">
-                        {data
-                          ? data.filter(
-                              (el: Donation) => el.status == "EXPIRED"
-                            ).length
-                          : 0}
-                      </dd>
-                    </dl>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white shadow rounded-lg m-10">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-medium text-gray-900">
-                Recent Donations
-              </h3>
-              <Link
-                to="/donor/donations"
-                className="text-sm font-medium text-blue-600 hover:text-blue-500"
-              >
-                View all
-              </Link>
-            </div>
-            <div className="p-4 w-full">
+          ) : (
+            <div>
               {data && data.length > 0 ? (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {data.slice(0, 3).map((donation: Donation, i: number) => {
+                <div className="flex flex-col bg-white rounded-lg m-10 shadow">
+                  {data.map((request: Request, i: number) => {
                     return (
-                      <DonationCard donation={donation} key={i} role="donor" />
+                      <RequestCard request={request} key={i} role="driver" />
                     );
                   })}
                 </div>
               ) : (
-                <div className="text-center py-8">
-                  <PackageIcon className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">
-                    No donations yet
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Start by adding a new food donation.
+                <div className="m-10 p-8 rounded-lg bg-white shadow flex items-center justify-between flex-col gap-3">
+                  <PackageIcon className="h-20 w-20 text-gray-400" />
+                  <h2 className="font-semibold text-sm">No Requests</h2>
+                  <p className="text-gray-400 text-sm">
+                    Assign request to appear here.
                   </p>
-                  <div className="mt-6">
-                    <Link
-                      to="/donor/add-donation"
-                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    >
-                      <PlusIcon className="mr-2 h-4 w-4" />
-                      Add New Donation
-                    </Link>
-                  </div>
                 </div>
               )}
             </div>
-          </div>
+          )}
         </DashboardLayout>
       </div>
     </div>
   );
 };
 
-export default DriverMyRequests;
+export default NgoMyRequests;

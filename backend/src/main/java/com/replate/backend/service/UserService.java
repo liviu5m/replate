@@ -30,6 +30,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public List<User> allUsersWithoutAuthenticated(Long userId, String username) {
+        System.out.println(username);
+        if(!username.equals("")) return userRepository.findAllByIdNotAndUsernameContainingIgnoreCase(userId, username);
+        return userRepository.findAllByIdNot(userId);
+    }
+
     public User setUpUserRole(UserRoleDto userRoleDto) {
         Optional<User> optionalUser = userRepository.findById(userRoleDto.getUserId());
         if (!optionalUser.isPresent()) throw new RuntimeException("User not found");

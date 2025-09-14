@@ -25,7 +25,7 @@ public class RequestService {
 
     public Request createRequest(RequestDto requestDto) {
         Request request = new Request();
-        User ngo = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new RuntimeException("NGO not found"));
+        User ngo = userRepository.findById(requestDto.getNgoId()).orElseThrow(() -> new RuntimeException("NGO not found"));
         request.setNgo(ngo);
         request.setStatus(requestDto.getStatus());
         return  requestRepository.save(request);
@@ -35,19 +35,44 @@ public class RequestService {
         return requestRepository.findById(id);
     }
 
-    public List<Request> getRequests(Long ngoId, String sorting) {
+    public List<Request> getRequests(String sorting) {
+        if (sorting.equals("all")) {
+            return requestRepository.findAll();
+        }
+        return requestRepository.findAllByStatus(RequestStatus.valueOf(sorting));
+    }
+
+    public List<Request> getRequestsByNgoId(String sorting, Long ngoId) {
         if (sorting.equals("all")) {
             return requestRepository.findAllByNgoId(ngoId);
         }
+        if(ngoId == -1) return requestRepository.findAllByStatus(RequestStatus.valueOf(sorting));
         return requestRepository.findAllByNgoIdAndStatus(ngoId, RequestStatus.valueOf(sorting));
     }
 
+    public List<Request> getRequestsByDriverId(Long driverId, String sorting) {
+        if (sorting.equals("all")) {
+            return requestRepository.findAllByDriverId(driverId);
+        }
+        return requestRepository.findAllByDriverIdAndStatus(driverId,RequestStatus.valueOf(sorting));
+    }
+
     public Request updateRequest(RequestDto requestDto, Long id) {
-        Request request = requestRepository.findById(id).orElseThrow(() -> new RuntimeException("Request not found"));
-        User ngo = userRepository.findById(requestDto.getUserId()).orElseThrow(() -> new RuntimeException("NGO not found"));
-        request.setNgo(ngo);
-        request.setStatus(requestDto.getStatus());
-        return requestRepository.save(request);
+        try {
+            Request request = requestRepository.findById(id).orElseThrow(() -> new RuntimeException("Request not found"));
+            User ngo = userRepository.findById(requestDto.getNgoId()).orElseThrow(() -> new RuntimeException("NGO not found"));
+            if(requestDto.getDriverId() != null) {
+                User driver = userRepository.findById(requestDto.getDriverId()).orElseThrow(() -> new RuntimeException("Driver not found"));
+                request.setDriver(driver);
+            }
+            request.setNgo(ngo);
+            request.setStatus(requestDto.getStatus());
+            request.setPickupDate(requestDto.getPickupDate());
+            request.setDeliveryDate(requestDto.getDeliveryDate());
+            return requestRepository.save(request);
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
     public void deleteRequest(Long id) {

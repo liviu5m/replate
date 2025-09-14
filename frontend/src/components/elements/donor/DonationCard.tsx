@@ -18,7 +18,7 @@ const DonationCard = ({
   donation: Donation;
   role: string;
   selectable?: boolean;
-  handleCheckboxChange?: (e: Donation) => boolean;
+  handleCheckboxChange?: (e: Donation) => boolean | undefined;
 }) => {
   const { token } = useAppContext();
   const queryClient = useQueryClient();
