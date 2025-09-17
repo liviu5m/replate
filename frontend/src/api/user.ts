@@ -31,8 +31,6 @@ type logInData = {
 let baseUrl = import.meta.env.VITE_API_URL;
 
 export async function createUser(formData: userData) {
-  console.log(formData);
-
   const response = await axios.post(baseUrl + "/auth/signup", formData);
   return response.data;
 }

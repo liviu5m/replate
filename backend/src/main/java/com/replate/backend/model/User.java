@@ -57,7 +57,8 @@ public class User implements UserDetails {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    public User(String username, String email, String password) {
+    public User(String fullName, String username, String email, String password) {
+        this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.password = password;

@@ -35,7 +35,7 @@ public class AuthenticationService {
             if(userRepository.findByUsername(input.getUsername()).isPresent()) throw new RuntimeException("Username already exists");
             if(userRepository.findByUsername(input.getEmail()).isPresent()) throw new RuntimeException("Email already exists");
             if(!input.getPassword().equals(input.getPasswordConfirmation())) throw new RuntimeException("Passwords do not match");
-            User user = new User(input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
+            User user = new User(input.getFullName(), input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()));
             user.setVerificationCode(generateVerificationCode());
             user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
             user.setEnabled(false);

@@ -20,9 +20,8 @@ const PersonalDataForm = ({
     passwordConfirmation: "",
   });
   const { mutate, isPending } = useMutation({
-    mutationFn: createUser,
+    mutationFn: () => createUser(formData),
     onSuccess: (data) => {
-      console.log(data);
       setUserId(data.id);
       setStep(2);
     },
@@ -54,7 +53,7 @@ const PersonalDataForm = ({
 
   const signUpUser = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutate(formData);
+    mutate();
   };
 
   const logInWithGoogle = () => {

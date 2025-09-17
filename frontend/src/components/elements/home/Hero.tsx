@@ -15,7 +15,7 @@ const Hero = () => {
               shelters in need.
             </h4>
             <div className="mt-5">
-              <button className="px-10 py-5 rounded-2xl text-white bg-[#22C55E] font-semibold">Join as Restaurant</button>
+              <button className="px-10 py-5 rounded-2xl text-white bg-[#22C55E] font-semibold cursor-pointer hover:bg-white hover:text-[#22C55E]">Join Now</button>
             </div>
           </div>
           <div className="w-1/2">
