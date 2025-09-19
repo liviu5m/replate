@@ -38,7 +38,6 @@ const Profile = () => {
     mutationKey: ["profile"],
     onSuccess: (data) => {
       setUser(data);
-      console.log(data);
       toast.success("Successfully updated profile");
     },
     onError: (error: AxiosError) => {

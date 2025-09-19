@@ -3,19 +3,19 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAppContext } from "../../lib/AppContext";
 
-interface DonorRoleRequiredProps {
+interface DriverRoleRequiredProps {
   children: ReactNode;
 }
 
-const DonorRoleRequired: React.FC<DonorRoleRequiredProps> = ({ children }) => {
+const DriverRoleRequired: React.FC<DriverRoleRequiredProps> = ({ children }) => {
   const location = useLocation();
   const { user } = useAppContext();
 
-  if (user?.role != "DONOR") {
+  if (user?.role != "DRIVER") {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
 };
 
-export default DonorRoleRequired;
+export default DriverRoleRequired;

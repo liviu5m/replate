@@ -20,6 +20,9 @@ import DriverDashboard from "./components/pages/driver/DriverDashboard";
 import DriverAvailableRequests from "./components/pages/driver/DriverAvailableRequests";
 import DriverMyRequests from "./components/pages/driver/DriverMyRequests";
 import Chat from "./components/pages/Chat";
+import DonorRoleRequired from "./components/middleware/DonorRoleRequired";
+import NgoRoleRequired from "./components/middleware/NgoRoleRequired";
+import DriverRoleRequired from "./components/middleware/DriverRoleRequired";
 
 function App() {
   const queryClient = new QueryClient();
@@ -44,7 +47,7 @@ function App() {
               <Route
                 path="/donor/*"
                 element={
-                  <AuthRequiredRoute>
+                  <DonorRoleRequired>
                     <Routes>
                       <Route path="/dashboard" element={<DonorDashboard />} />
                       <Route path="/donations" element={<DonorDonations />} />
@@ -57,13 +60,13 @@ function App() {
                         element={<DonorEditDonation />}
                       />
                     </Routes>
-                  </AuthRequiredRoute>
+                  </DonorRoleRequired>
                 }
               />
               <Route
                 path="/ngo/*"
                 element={
-                  <AuthRequiredRoute>
+                  <NgoRoleRequired>
                     <Routes>
                       <Route path="/dashboard" element={<NgoDashboard />} />
                       <Route
@@ -72,13 +75,13 @@ function App() {
                       />
                       <Route path="/my-requests" element={<NgoMyRequests />} />
                     </Routes>
-                  </AuthRequiredRoute>
+                  </NgoRoleRequired>
                 }
               />
               <Route
                 path="/driver/*"
                 element={
-                  <AuthRequiredRoute>
+                  <DriverRoleRequired>
                     <Routes>
                       <Route path="/dashboard" element={<DriverDashboard />} />
                       <Route
@@ -90,7 +93,7 @@ function App() {
                         element={<DriverMyRequests />}
                       />
                     </Routes>
-                  </AuthRequiredRoute>
+                  </DriverRoleRequired>
                 }
               />
               <Route
